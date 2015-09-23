@@ -16,15 +16,15 @@
 package com.example.android.uamp.ui;
 
 import android.app.ActivityOptions;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.MediaRouteButton;
 import android.support.v7.media.MediaRouter;
 import android.support.v7.widget.Toolbar;
@@ -56,7 +56,7 @@ import com.google.android.libraries.cast.companionlibrary.cast.callbacks.VideoCa
  * a {@link android.support.v4.widget.DrawerLayout} with id 'drawerLayout' and
  * a {@link android.widget.ListView} with id 'drawerList'.
  */
-public abstract class ActionBarCastActivity extends AppCompatActivity {
+public abstract class ActionBarCastActivity extends ActionBarActivity {
 
     private static final String TAG = LogHelper.makeLogTag(ActionBarCastActivity.class);
 
@@ -74,7 +74,7 @@ public abstract class ActionBarCastActivity extends AppCompatActivity {
 
     private int mItemToOpenWhenDrawerCloses = -1;
 
-    private final VideoCastConsumerImpl mCastConsumer = new VideoCastConsumerImpl() {
+    private VideoCastConsumerImpl mCastConsumer = new VideoCastConsumerImpl() {
 
         @Override
         public void onFailed(int resourceId, int statusCode) {
@@ -113,18 +113,17 @@ public abstract class ActionBarCastActivity extends AppCompatActivity {
         }
     };
 
-    private final DrawerLayout.DrawerListener mDrawerListener = new DrawerLayout.DrawerListener() {
+    private DrawerLayout.DrawerListener mDrawerListener = new DrawerLayout.DrawerListener() {
         @Override
         public void onDrawerClosed(View drawerView) {
             if (mDrawerToggle != null) mDrawerToggle.onDrawerClosed(drawerView);
             int position = mItemToOpenWhenDrawerCloses;
             if (position >= 0) {
-                Bundle extras = ActivityOptions.makeCustomAnimation(
-                    ActionBarCastActivity.this, R.anim.fade_in, R.anim.fade_out).toBundle();
+                //Bundle extras = ActivityOptions.makeCustomAnimation(
+                //    ActionBarCastActivity.this, R.anim.fade_in, R.anim.fade_out).toBundle();
 
                 Class activityClass = mDrawerMenuContents.getActivity(position);
-                startActivity(new Intent(ActionBarCastActivity.this, activityClass), extras);
-                finish();
+                startActivity(new Intent(ActionBarCastActivity.this, activityClass));
             }
         }
 
@@ -141,12 +140,11 @@ public abstract class ActionBarCastActivity extends AppCompatActivity {
         @Override
         public void onDrawerOpened(View drawerView) {
             if (mDrawerToggle != null) mDrawerToggle.onDrawerOpened(drawerView);
-            if (getSupportActionBar() != null) getSupportActionBar()
-                    .setTitle(R.string.app_name);
+            getSupportActionBar().setTitle(R.string.app_name);
         }
     };
 
-    private final FragmentManager.OnBackStackChangedListener mBackStackChangedListener =
+    private FragmentManager.OnBackStackChangedListener mBackStackChangedListener =
         new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
@@ -192,7 +190,7 @@ public abstract class ActionBarCastActivity extends AppCompatActivity {
         // Whenever the fragment back stack changes, we may need to update the
         // action bar toggle: only top level screens show the hamburger-like icon, inner
         // screens - either Activities or fragments - show the "Up" icon instead.
-        getFragmentManager().addOnBackStackChangedListener(mBackStackChangedListener);
+        getSupportFragmentManager().addOnBackStackChangedListener(mBackStackChangedListener);
     }
 
     @Override
@@ -208,7 +206,7 @@ public abstract class ActionBarCastActivity extends AppCompatActivity {
         super.onPause();
         mCastManager.removeVideoCastConsumer(mCastConsumer);
         mCastManager.decrementUiCounter();
-        getFragmentManager().removeOnBackStackChangedListener(mBackStackChangedListener);
+        getSupportFragmentManager().removeOnBackStackChangedListener(mBackStackChangedListener);
     }
 
     @Override
@@ -240,7 +238,7 @@ public abstract class ActionBarCastActivity extends AppCompatActivity {
             return;
         }
         // Otherwise, it may return to the previous fragment stack
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
         } else {
@@ -332,13 +330,11 @@ public abstract class ActionBarCastActivity extends AppCompatActivity {
         if (mDrawerToggle == null) {
             return;
         }
-        boolean isRoot = getFragmentManager().getBackStackEntryCount() == 0;
+        boolean isRoot = getSupportFragmentManager().getBackStackEntryCount() == 0;
         mDrawerToggle.setDrawerIndicatorEnabled(isRoot);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowHomeEnabled(!isRoot);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(!isRoot);
-            getSupportActionBar().setHomeButtonEnabled(!isRoot);
-        }
+        getSupportActionBar().setDisplayShowHomeEnabled(!isRoot);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(!isRoot);
+        getSupportActionBar().setHomeButtonEnabled(!isRoot);
         if (isRoot) {
             mDrawerToggle.syncState();
         }

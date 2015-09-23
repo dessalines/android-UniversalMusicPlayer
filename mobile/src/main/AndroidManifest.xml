@@ -23,22 +23,22 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- Set android.software.leanback to false, so the APK will be available to both
-    TV and regular devices. -->
     <uses-feature
         android:name="android.software.leanback"
         android:required="false" />
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="21" />
 
     <application
         android:name=".UAMPApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/UAmpAppTheme"
-        android:banner="@drawable/banner_tv">
+        android:theme="@style/UAmpAppTheme" >
 
         <meta-data
             android:name="com.google.android.gms.car.application"
@@ -70,33 +70,12 @@
         </activity>
 
         <!-- Proxy activity that opens either the NowPlaying TV or the mobile UI, depending on
-        the current environment -->
+        the current environment
+        TODO:  TV is not yet supported, this is just a placeholder! -->
         <activity
             android:name=".ui.NowPlayingActivity"
             android:icon="@drawable/ic_launcher">
         </activity>
-
-        <!-- Main activity for Android TV user interface -->
-        <activity
-            android:name=".ui.tv.TvBrowseActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.UAmp.TVLeanback" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.tv.TvVerticalGridActivity"
-            android:theme="@style/Theme.UAmp.TVLeanback"
-            android:parentActivityName=".ui.tv.TvBrowseActivity" />
-
-        <!-- Android TV UI when playing a song -->
-        <activity
-            android:name=".ui.tv.TvPlaybackActivity"
-            android:theme="@style/Theme.UAmp.TVLeanback"
-            android:parentActivityName=".ui.tv.TvBrowseActivity" />
 
         <!--
              (OPTIONAL) use this meta data to indicate which icon should be
@@ -116,16 +95,6 @@
             android:name="com.google.android.gms.car.application.theme"
             android:resource="@style/CarTheme" />
 
-        <!--
-             (OPTIONAL) use this meta data to override the theme from which Android Wear will
-             look for colors. Currently, only background color of the media cards can be set, via
-             colorPrimaryDark. If you don't set this custom theme, Android Wear will look
-             for colorPrimaryDark attribute in your application theme.
-        -->
-        <meta-data
-            android:name="com.google.android.wearable.media.theme"
-            android:resource="@style/WearTheme" />
-
         <!-- Main music service, provides media browsing and media playback services to
          consumers through MediaBrowserService and MediaSession. Consumers connect to it through
          MediaBrowser (for browsing) and MediaController (for play session control) -->
@@ -134,9 +103,12 @@
             android:exported="true"
             tools:ignore="ExportedService">
             <intent-filter>
-                <action android:name="android.media.browse.MediaBrowserService" />
+                <action android:name="android.media.browse.MediaBrowserServiceCompat" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".MediaButtonReceiver" />
+
 
         <!-- Service that keeps track of reconnecting to Cast when wifi is enabled. -->
         <service

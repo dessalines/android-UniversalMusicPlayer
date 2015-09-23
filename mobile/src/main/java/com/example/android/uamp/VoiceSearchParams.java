@@ -25,7 +25,7 @@ import android.text.TextUtils;
  */
 public final class VoiceSearchParams {
 
-    public final String query;
+    public String query;
     public boolean isAny;
     public boolean isUnstructured;
     public boolean isGenreFocus;

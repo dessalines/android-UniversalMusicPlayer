@@ -28,8 +28,8 @@ public class DrawerMenuContents {
     public static final String FIELD_TITLE = "title";
     public static final String FIELD_ICON = "icon";
 
-    private final ArrayList<Map<String, ?>> items;
-    private final Class[] activities;
+    private ArrayList<Map<String, ?>> items;
+    private Class[] activities;
 
     public DrawerMenuContents(Context ctx) {
         activities = new Class[2];

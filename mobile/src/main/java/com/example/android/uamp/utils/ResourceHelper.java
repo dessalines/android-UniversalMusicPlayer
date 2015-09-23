@@ -43,7 +43,7 @@ public class ResourceHelper {
             packageContext.setTheme(applicationInfo.theme);
             Resources.Theme theme = packageContext.getTheme();
             TypedArray ta = theme.obtainStyledAttributes(new int[] {attribute});
-            themeColor = ta.getColor(0, defaultColor);
+            // themeColor = ta.getColor(0, defaultColor);
             ta.recycle();
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

@@ -35,7 +35,7 @@ public class ScrimInsetsRelativeLayout extends RelativeLayout {
     private Drawable mInsetForeground;
 
     private Rect mInsets;
-    private final Rect mTempRect = new Rect();
+    private Rect mTempRect = new Rect();
     private OnInsetsCallback mOnInsetsCallback;
 
     public ScrimInsetsRelativeLayout(Context context) {
@@ -137,7 +137,7 @@ public class ScrimInsetsRelativeLayout extends RelativeLayout {
         mOnInsetsCallback = onInsetsCallback;
     }
 
-    public interface OnInsetsCallback {
-        void onInsetsChanged(Rect insets);
+    public static interface OnInsetsCallback {
+        public void onInsetsChanged(Rect insets);
     }
 }
